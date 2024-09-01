@@ -1,7 +1,7 @@
 name: Autograding Tests
 'on':
-- workflow_dispatch
-- repository_dispatch
+  - workflow_dispatch
+  - repository_dispatch
 permissions:
   checks: write
   actions: read
@@ -13,48 +13,81 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Setup Python environment
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install -qr requirements.txt
+        pip install flake8==5.0.4
+
     - name: Setup
       id: setup
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: Setup
-        setup-command: sudo -H pip3 install -qr requirements.txt; sudo -H pip3 install
-          flake8==5.0.4
-        command: flake8 --ignore "N801, E203, E266, E501, W503, F812, E741, N803,
-          N802, N806" minitorch/ tests/ project/; mypy minitorch/*
+        setup-command: |
+          source venv/bin/activate
+          pip install -qr requirements.txt
+          pip install flake8==5.0.4
+        command: |
+          source venv/bin/activate
+          flake8 --ignore "N801, E203, E266, E501, W503, F812, E741, N803, N802, N806" minitorch/ tests/ project/
+          mypy minitorch/*
         timeout: 10
+
     - name: Task 0.1
       id: task-0-1
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: Task 0.1
-        setup-command: sudo -H pip3 install -qr requirements.txt
-        command: pytest -m task0_1
+        setup-command: |
+          source venv/bin/activate
+          pip install -qr requirements.txt
+        command: |
+          source venv/bin/activate
+          pytest -m task0_1
         timeout: 10
+
     - name: Task 0.2
       id: task-0-2
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: Task 0.2
-        setup-command: sudo -H pip3 install -qr requirements.txt
-        command: pytest -m task0_2
+        setup-command: |
+          source venv/bin/activate
+          pip install -qr requirements.txt
+        command: |
+          source venv/bin/activate
+          pytest -m task0_2
         timeout: 10
+
     - name: Task 0.3
       id: task-0-3
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: Task 0.3
-        setup-command: sudo -H pip3 install -qr requirements.txt
-        command: pytest -m task0_3
+        setup-command: |
+          source venv/bin/activate
+          pip install -qr requirements.txt
+        command: |
+          source venv/bin/activate
+          pytest -m task0_3
         timeout: 10
+
     - name: Task 0.4
       id: task-0-4
       uses: classroom-resources/autograding-command-grader@v1
       with:
         test-name: Task 0.4
-        setup-command: sudo -H pip3 install -qr requirements.txt
-        command: pytest -m task0_4
+        setup-command: |
+          source venv/bin/activate
+          pip install -qr requirements.txt
+        command: |
+          source venv/bin/activate
+          pytest -m task0_4
         timeout: 10
+
     - name: Autograding Reporter
       uses: classroom-resources/autograding-grading-reporter@v1
       env:
